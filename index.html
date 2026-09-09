@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Foxes Team Daily Wheel</title>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 
@@ -56,25 +56,24 @@
         .wheel-float::before {
             content: "";
             position: absolute;
-            left: 8%;
-            right: 8%;
-            bottom: -12%;
-            height: 26%;
+            left: 10%;
+            right: 10%;
+            bottom: 0;
+            height: 22%;
             border-radius: 9999px;
             background: radial-gradient(ellipse at center, rgba(0,0,0,0.72), rgba(0,0,0,0.34) 45%, transparent 74%);
-            filter: blur(22px);
-            transform: scaleX(1.08);
+            filter: blur(18px);
             z-index: -1;
             pointer-events: none;
         }
         .wheel-float::after {
             content: "";
             position: absolute;
-            inset: -6%;
+            inset: 0;
             border-radius: 9999px;
             background: radial-gradient(circle at 50% 50%, transparent 0 26%, color-mix(in srgb, var(--accent) 10%, transparent) 42%, transparent 72%);
-            filter: blur(30px);
-            opacity: 0.58;
+            filter: blur(24px);
+            opacity: 0.5;
             z-index: -1;
             pointer-events: none;
         }
@@ -155,7 +154,7 @@
         }
     </style>
 </head>
-<body data-day="1" class="relative bg-bg text-text font-sans antialiased min-h-screen overflow-x-hidden">
+<body data-day="1" class="relative bg-bg text-text font-sans antialiased">
 
     <div class="friday-aurora pointer-events-none fixed inset-0 z-0 opacity-0 transition-opacity duration-1000 motion-only" aria-hidden="true"></div>
     <script>
@@ -166,73 +165,50 @@
         }
     </script>
 
-    <!--
-      Single outer CSS Grid binds the entire page.
-      Mobile (<md): 1 column, everything stacks in DOM order.
-      Desktop/tablet (md+): 3 columns [day info | wheel stage | rail], 2 rows:
-        row 1: topbar spans all columns
-        row 2: hero top-left, wheel/action centered, rail top-right
-      This keeps the requested anchors without letting the hero push the wheel down.
-    -->
-    <div class="relative z-10 w-full min-h-svh md:h-svh md:min-h-0 md:overflow-hidden
-                px-4 sm:px-6 lg:px-10 py-3 sm:py-4
-                grid gap-y-3 sm:gap-y-4 md:gap-y-3 gap-x-4 lg:gap-x-8
-                grid-cols-1 md:grid-cols-[minmax(160px,220px)_minmax(220px,1fr)_240px]
-                lg:grid-cols-[minmax(220px,280px)_minmax(320px,1fr)_300px]
-                xl:grid-cols-[minmax(260px,340px)_minmax(440px,1fr)_400px]
-                md:grid-rows-[auto_minmax(0,1fr)]">
-
-        <!-- ROW 1 (md+: spans all cols): Topbar -->
-        <header class="md:col-span-3 flex items-center justify-between gap-3">
-            <div class="text-[0.7rem] font-semibold tracking-[0.22em] uppercase text-text-muted">FOXES DAILY WHEEL</div>
+    <div class="app-shell">
+        <header class="topbar">
+            <div class="brand-mark">Foxes Daily Wheel</div>
             <button id="soundToggle"
                     type="button"
-                    class="bg-surface border border-border-c text-text-muted hover:text-text hover:border-text-muted w-9 h-9 rounded-lg flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg shrink-0"
+                    class="sound-toggle bg-surface border border-border-c text-text-muted hover:text-text hover:border-text-muted rounded-lg flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg shrink-0"
                     aria-pressed="false" aria-label="Enable chime" title="Toggle chime">🔕</button>
         </header>
 
-        <!-- ROW 2 col 1: Hero (date + day name + pips + countdown) -->
-        <section class="md:col-start-1 md:row-start-2 md:self-start text-center md:text-left flex flex-col items-center md:items-start gap-2 pt-2 md:pt-3">
-            <div id="dateLine" class="text-[0.7rem] sm:text-xs font-semibold tracking-[0.28em] uppercase text-text-muted tabular-nums">
+        <section class="hero">
+            <div id="dateLine" class="date-line">
                 Thu · 21 May 2026
             </div>
-            <h1 id="dayName" class="font-black uppercase leading-[0.9] tracking-[-0.055em]
-                                    text-3xl sm:text-4xl md:text-5xl">
+            <h1 id="dayName" class="day-name">
                 <span class="accent-text">Monday</span>
             </h1>
-            <div id="marquee" class="marquee-mask hidden w-full max-w-[640px] overflow-hidden whitespace-nowrap mt-1" aria-hidden="true">
-                <span class="inline-block font-bold text-xs tracking-[0.32em] uppercase text-brand motion-only animate-marquee" style="padding-left:100%;">
+            <div id="marquee" class="marquee-mask hidden overflow-hidden whitespace-nowrap" aria-hidden="true">
+                <span class="marquee-track inline-block font-bold text-xs tracking-[0.32em] uppercase text-brand motion-only animate-marquee">
                     IT'S FRIDAY 🦊 WEEKEND INCOMING 🦊 GO HAVE FUN 🦊 IT'S FRIDAY 🦊
                 </span>
             </div>
-            <div id="weekStrip" class="flex gap-1.5 mt-1.5 flex-wrap justify-center md:justify-start"
+            <div id="weekStrip" class="week-strip"
                  role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-label="Week progress">
-                <div class="pip pip-base w-10 h-3.5 rounded-full grid place-items-center text-[0.55rem] font-semibold tracking-wider transition-all duration-300" data-day="1">MON</div>
-                <div class="pip pip-base w-10 h-3.5 rounded-full grid place-items-center text-[0.55rem] font-semibold tracking-wider transition-all duration-300" data-day="2">TUE</div>
-                <div class="pip pip-base w-10 h-3.5 rounded-full grid place-items-center text-[0.55rem] font-semibold tracking-wider transition-all duration-300" data-day="3">WED</div>
-                <div class="pip pip-base w-10 h-3.5 rounded-full grid place-items-center text-[0.55rem] font-semibold tracking-wider transition-all duration-300" data-day="4">THU</div>
-                <div class="pip pip-base w-10 h-3.5 rounded-full grid place-items-center text-[0.55rem] font-semibold tracking-wider transition-all duration-300" data-day="5">FRI</div>
+                <div class="pip pip-base" data-day="1">MON</div>
+                <div class="pip pip-base" data-day="2">TUE</div>
+                <div class="pip pip-base" data-day="3">WED</div>
+                <div class="pip pip-base" data-day="4">THU</div>
+                <div class="pip pip-base" data-day="5">FRI</div>
             </div>
-            <div id="countdown" class="text-xs sm:text-sm font-medium text-text-muted tabular-nums tracking-tight mt-0.5">
+            <div id="countdown" class="countdown text-text-muted">
                 Weekend in 4 days
             </div>
         </section>
 
-        <!-- ROW 2 col 2: Stage (wheel + spin), centered as the primary action -->
-        <main class="md:col-start-2 md:row-start-2 md:h-full min-h-0 flex flex-col items-center justify-center gap-5 sm:gap-6 md:-translate-y-4 lg:-translate-y-5">
-            <!-- Fallback (pre-JS) size leaves room for the wheel-float glow
-                 (6% overhang) so the page never overflows horizontally. -->
-            <div id="wheelOuter"
-                 class="wheel-float relative aspect-square mx-auto"
-                 style="width: var(--wheel-size, min(50svh, calc(100% - 24px), 500px)); height: var(--wheel-size, min(50svh, calc(100% - 24px), 500px));">
-                <div class="absolute top-[-12px] sm:top-[-16px] left-1/2 -translate-x-1/2 z-30 w-9 sm:w-10 md:w-11 pointer-events-none pointer-svg">
-                    <svg viewBox="0 0 44 56" fill="none" class="block w-full h-auto" aria-hidden="true">
+        <main class="stage">
+            <div id="wheelOuter" class="wheel-float">
+                <div class="wheel-pointer pointer-events-none pointer-svg" aria-hidden="true">
+                    <svg viewBox="0 0 44 56" fill="none" class="block w-full h-auto">
                         <path d="M22 56C22 56 4 30 4 18C4 8 12 0 22 0C32 0 40 8 40 18C40 30 22 56 22 56Z" fill="#FF6A3D"/>
                     </svg>
                 </div>
                 <div id="chartContainer" class="wheel-rim wheel-transition relative w-full h-full rounded-full overflow-hidden"></div>
                 <div class="center-pin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20
-                            w-[18%] aspect-square rounded-full flex items-center justify-center text-2xl sm:text-3xl"
+                            w-[18%] aspect-square rounded-full flex items-center justify-center"
                      aria-hidden="true">🦊</div>
             </div>
 
@@ -246,12 +222,10 @@
             </button>
         </main>
 
-        <!-- ROW 2 col 3: Rail (Stats). self-start anchors to top-right.
-              max-h + overflow on md+ so the rail can't push the grid taller than viewport. -->
-        <aside class="md:col-start-3 md:row-start-2 md:self-start md:min-h-0 md:max-h-full md:overflow-y-auto min-w-0">
-            <section class="panel-float bg-surface border border-border-c rounded-2xl p-4 md:p-3">
-                <h2 class="text-[0.65rem] font-semibold tracking-[0.22em] uppercase text-text-muted mb-3 md:mb-2">Team Stats</h2>
-                <div id="currentStreakDisplay" class="text-sm pb-3 mb-3 md:pb-2 md:mb-2 border-b border-border-c">No picks yet</div>
+        <aside class="rail">
+            <section class="panel-float bg-surface border border-border-c rounded-2xl p-4">
+                <h2 class="rail-title">Team Stats</h2>
+                <div id="currentStreakDisplay" class="text-sm pb-3 mb-3 border-b border-border-c">No picks yet</div>
                 <div id="pickHistory" class="text-sm"></div>
             </section>
         </aside>
@@ -261,12 +235,12 @@
 
     <!-- Winner Modal -->
     <div id="winner"
-         class="hidden fixed inset-0 z-[300] items-center justify-center p-4 bg-black/60 glass-overlay"
+         class="winner-overlay hidden fixed inset-0 z-[300] bg-black/60 glass-overlay"
          role="dialog" aria-modal="true" aria-labelledby="winnerName">
-        <div class="bg-surface border border-border-c rounded-3xl p-8 sm:p-10 w-full max-w-[580px] text-center animate-settle">
+        <div class="winner-card bg-surface border border-border-c text-center animate-settle">
             <div class="text-3xl mb-3" aria-hidden="true">🦊</div>
             <div id="winnerEyebrow" class="text-text-muted text-xs font-semibold tracking-[0.28em] uppercase mb-3">Today's speaker</div>
-            <div id="winnerName" class="text-brand font-black uppercase leading-[0.9] tracking-[-0.05em] text-5xl sm:text-6xl md:text-7xl mb-3"></div>
+            <div id="winnerName" class="winner-name text-brand font-black uppercase leading-[0.9] tracking-[-0.05em] mb-3"></div>
             <div id="winnerSub" class="text-text-muted text-sm sm:text-base mb-6">Are you ready to share your updates?</div>
             <button id="closeWinner"
                     type="button"
@@ -430,8 +404,8 @@
                 let daysUntilFriday;
                 if (dayIdx <= 5) daysUntilFriday = 5 - dayIdx;
                 else daysUntilFriday = 6;
-                if (dayIdx === 0)      countdownEl.textContent = 'Sunday — recharge mode';
-                else if (dayIdx === 6) countdownEl.textContent = 'Saturday — enjoy it';
+                if (dayIdx === 0)      countdownEl.textContent = 'Sunday. Recharge mode';
+                else if (dayIdx === 6) countdownEl.textContent = 'Saturday. Enjoy it';
                 else if (daysUntilFriday === 1) countdownEl.textContent = 'Tomorrow is Friday';
                 else                   countdownEl.textContent = `Weekend in ${daysUntilFriday} days`;
             }
@@ -512,7 +486,7 @@
                 text.setAttribute('text-anchor', 'middle');
                 text.setAttribute('dominant-baseline', 'central');
                 text.setAttribute('fill', '#F5F5F4');
-                text.setAttribute('font-size', '4');
+                text.setAttribute('font-size', names.length <= 4 ? '5.4' : '4');
                 text.setAttribute('font-weight', '700');
                 text.textContent = name.toUpperCase();
                 svg.appendChild(text);
@@ -760,51 +734,42 @@
                 }
             });
 
-            // Layout sizing: the wheel is the flexible piece. Measure the
-            // actual stage slot and reserve room for the fixed Spin button.
+            // Size the wheel to the stage slot. Never let Spin fall off the
+            // stage, and never let the wheel spill into neighbouring columns.
             function fitWheelToViewport() {
                 const wheel = document.getElementById('wheelOuter');
                 const btn = document.getElementById('spinButton');
-                const stage = document.querySelector('main');
+                const stage = document.querySelector('.stage');
                 if (!wheel || !btn || !stage) return;
-                wheel.style.removeProperty('--wheel-size');
-                requestAnimationFrame(() => {
-                    const stageRect = stage.getBoundingClientRect();
-                    const btnRect = btn.getBoundingClientRect();
-                    const stageStyle = getComputedStyle(stage);
-                    const gap = parseFloat(stageStyle.rowGap || stageStyle.gap) || 0;
-                    const viewportPad = matchMedia('(min-width: 768px)').matches ? 14 : 18;
-                    const maxSize = matchMedia('(min-width: 1024px)').matches ? 460 : 420;
-                    const availableHeight = window.innerHeight - stageRect.top - btnRect.height - gap - viewportPad;
-                    const availableWidth = matchMedia('(min-width: 768px)').matches
-                        ? stageRect.width
-                        : stageRect.width - 22;
-                    const size = Math.floor(Math.max(180, Math.min(maxSize, availableHeight, availableWidth)));
-                    wheel.style.setProperty('--wheel-size', `${size}px`);
-
-                    requestAnimationFrame(() => {
-                        const overflow = btn.getBoundingClientRect().bottom - window.innerHeight + viewportPad;
-                        if (overflow > 0) {
-                            const adjusted = Math.max(140, size - Math.ceil(overflow));
-                            wheel.style.setProperty('--wheel-size', `${adjusted}px`);
-                        }
-                    });
-                });
+                const stageRect = stage.getBoundingClientRect();
+                const btnH = btn.getBoundingClientRect().height;
+                const gap = parseFloat(getComputedStyle(stage).rowGap || getComputedStyle(stage).gap) || 16;
+                const pointer = 22;
+                const pad = 8;
+                const availableHeight = stageRect.height - btnH - gap - pointer - pad;
+                const availableWidth = stageRect.width - pad;
+                const wide = matchMedia('(min-width: 1440px)').matches;
+                const maxSize = wide ? 580 : 520;
+                const size = Math.floor(Math.max(160, Math.min(maxSize, availableHeight, availableWidth)));
+                if (Number.isFinite(size)) wheel.style.setProperty('--wheel-size', `${size}px`);
             }
+            let fitRaf = 0;
             function scheduleFitWheel() {
-                requestAnimationFrame(fitWheelToViewport);
+                if (fitRaf) cancelAnimationFrame(fitRaf);
+                fitRaf = requestAnimationFrame(() => {
+                    fitRaf = 0;
+                    fitWheelToViewport();
+                });
             }
             if ('ResizeObserver' in window) {
                 const layoutObserver = new ResizeObserver(scheduleFitWheel);
-                layoutObserver.observe(document.querySelector('.grid'));
-                layoutObserver.observe(document.querySelector('main'));
-                layoutObserver.observe(document.querySelector('aside'));
+                const shell = document.querySelector('.app-shell');
+                const stage = document.querySelector('.stage');
+                if (shell) layoutObserver.observe(shell);
+                if (stage) layoutObserver.observe(stage);
             }
-            // Run multiple times to catch any layout settling (font load, chart init, rail render).
             fitWheelToViewport();
-            setTimeout(fitWheelToViewport, 100);
-            setTimeout(fitWheelToViewport, 400);
-            window.addEventListener('resize', fitWheelToViewport);
+            window.addEventListener('resize', scheduleFitWheel);
             if (document.fonts && document.fonts.ready) {
                 document.fonts.ready.then(fitWheelToViewport);
             }

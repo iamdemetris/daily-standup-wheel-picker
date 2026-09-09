@@ -25,10 +25,14 @@
 html {
     line-height: 1.5;
     -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
 }
 body {
     margin: 0;
     font-family: var(--font-sans);
+    overflow-x: hidden;
+    min-height: 100svh;
+    min-height: 100dvh;
 }
 h1, h2, h3, p {
     margin: 0;
@@ -336,5 +340,307 @@ svg { display: block; }
 @media (min-width: 1280px) {
     .xl\:grid-cols-\[minmax\(260px\,340px\)_minmax\(440px\,1fr\)_400px\] {
         grid-template-columns: minmax(260px, 340px) minmax(440px, 1fr) 400px;
+    }
+}
+
+/* ── App layout: named grid areas that reflow by width and height ────── */
+
+.app-shell {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    width: 100%;
+    height: 100svh;
+    height: 100dvh;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    padding-left: max(1rem, env(safe-area-inset-left));
+    gap: 0.75rem 1rem;
+    grid-template-areas:
+        "topbar"
+        "hero"
+        "stage"
+        "rail";
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+}
+
+.topbar {
+    grid-area: topbar;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-width: 0;
+}
+.brand-mark {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+    white-space: nowrap;
+}
+.sound-toggle {
+    width: 44px;
+    height: 44px;
+}
+
+.hero {
+    grid-area: hero;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+    min-width: 0;
+    container-type: inline-size;
+    container-name: hero;
+}
+.date-line {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.day-name {
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+    white-space: nowrap;
+    max-width: 100%;
+    font-size: clamp(1.5rem, 12cqi, 3.25rem);
+}
+.countdown {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.025em;
+    white-space: nowrap;
+}
+.week-strip {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 0.375rem;
+    min-width: 0;
+    max-width: 100%;
+}
+.pip {
+    flex: 0 0 auto;
+    width: clamp(1.7rem, 8cqi, 2.5rem);
+    height: 0.875rem;
+    border-radius: 9999px;
+    display: grid;
+    place-items: center;
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: background-color 300ms, color 300ms, box-shadow 300ms;
+}
+
+.stage {
+    grid-area: stage;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    min-width: 0;
+    min-height: 0;
+}
+.wheel-float {
+    position: relative;
+    isolation: isolate;
+    width: var(--wheel-size, min(100%, 48dvh, 440px));
+    height: var(--wheel-size, min(100%, 48dvh, 440px));
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    margin-inline: auto;
+}
+.wheel-pointer {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    width: 2.25rem;
+    transform: translateX(-50%);
+    z-index: 30;
+}
+.center-pin {
+    font-size: clamp(1.1rem, 6cqi, 1.875rem);
+}
+
+.rail {
+    grid-area: rail;
+    min-width: 0;
+    min-height: 0;
+    align-self: stretch;
+    overflow: auto;
+}
+.rail-title {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.marquee-mask {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+.marquee-track {
+    padding-left: 100%;
+}
+
+.winner-overlay {
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+}
+.winner-card {
+    width: 100%;
+    max-width: 100%;
+    max-height: min(100dvh, 40rem);
+    overflow: auto;
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 2rem 1.5rem max(1.5rem, env(safe-area-inset-bottom));
+}
+.winner-name {
+    font-size: clamp(2.25rem, 12vw, 4.5rem);
+}
+
+/* Tablet portrait and small laptops: hero + stats on one row, wheel full width. */
+@media (min-width: 720px) and (max-width: 1099.98px) and (min-height: 560px) {
+    .app-shell {
+        padding-left: max(1.5rem, env(safe-area-inset-left));
+        padding-right: max(1.5rem, env(safe-area-inset-right));
+        grid-template-areas:
+            "topbar topbar"
+            "hero rail"
+            "stage stage";
+        grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+        grid-template-rows: auto auto minmax(0, 1fr);
+        overflow: hidden;
+    }
+    .hero {
+        align-items: flex-start;
+        text-align: left;
+    }
+    .week-strip { justify-content: flex-start; }
+    .rail { align-self: start; max-height: 100%; }
+    .day-name { font-size: clamp(2rem, 8cqi, 3.25rem); }
+    .wheel-float {
+        width: var(--wheel-size, min(100%, 52dvh, 500px));
+        height: var(--wheel-size, min(100%, 52dvh, 500px));
+    }
+}
+
+/* Wide desktop: three columns, wheel owns the centre. */
+@media (min-width: 1100px) and (min-height: 640px) {
+    .app-shell {
+        padding-left: max(2.5rem, env(safe-area-inset-left));
+        padding-right: max(2.5rem, env(safe-area-inset-right));
+        gap: 0.75rem 2rem;
+        grid-template-areas:
+            "topbar topbar topbar"
+            "hero stage rail";
+        grid-template-columns: minmax(200px, 280px) minmax(0, 1fr) minmax(240px, 320px);
+        grid-template-rows: auto minmax(0, 1fr);
+        height: 100svh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+    .hero {
+        align-items: flex-start;
+        text-align: left;
+        align-self: start;
+        padding-top: 0.5rem;
+    }
+    .week-strip { justify-content: flex-start; }
+    .rail { align-self: start; }
+    .day-name { font-size: clamp(2.1rem, 10cqi, 3.4rem); }
+    .sound-toggle { width: 40px; height: 40px; }
+    .wheel-pointer { width: 2.75rem; top: -16px; }
+    .wheel-float {
+        width: var(--wheel-size, min(100%, 56dvh, 560px));
+        height: var(--wheel-size, min(100%, 56dvh, 560px));
+    }
+    .winner-overlay {
+        align-items: center;
+        padding: 1rem;
+    }
+    .winner-card {
+        max-width: 580px;
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+    }
+}
+
+/* Short landscape (phones on their side, short tablets): compact three columns. */
+@media (max-height: 559px) and (min-width: 700px) {
+    .app-shell {
+        padding-top: max(0.4rem, env(safe-area-inset-top));
+        padding-bottom: max(0.4rem, env(safe-area-inset-bottom));
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+        gap: 0.5rem 0.75rem;
+        grid-template-areas:
+            "hero stage rail";
+        grid-template-columns: minmax(140px, 200px) minmax(0, 1fr) minmax(180px, 240px);
+        grid-template-rows: minmax(0, 1fr);
+        height: 100svh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+    .topbar {
+        position: absolute;
+        top: max(0.35rem, env(safe-area-inset-top));
+        right: max(0.5rem, env(safe-area-inset-right));
+        left: auto;
+        width: auto;
+        z-index: 20;
+        background: transparent;
+    }
+    .brand-mark { display: none; }
+    .hero {
+        align-items: flex-start;
+        text-align: left;
+        justify-content: center;
+        gap: 0.35rem;
+        padding-top: 0;
+    }
+    .week-strip { justify-content: flex-start; }
+    .rail { align-self: center; }
+    #marquee { display: none !important; }
+    .day-name { font-size: clamp(1.25rem, 11cqi, 2rem); }
+    .stage { gap: 0.65rem; }
+    .wheel-pointer { width: 1.75rem; top: -10px; }
+    .sound-toggle { width: 40px; height: 40px; }
+}
+
+@media (max-height: 500px) {
+    #marquee { display: none !important; }
+}
+
+@media (min-width: 640px) {
+    .winner-overlay {
+        align-items: center;
+        padding: 1rem;
+    }
+    .winner-card {
+        max-width: 580px;
+        border-radius: 1.5rem;
+        padding: 2.5rem;
     }
 }
