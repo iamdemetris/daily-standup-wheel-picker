@@ -64,7 +64,7 @@ Clearing browser site data resets these values.
 To change the wheel entries, edit the `names` array in [index.html](./index.html):
 
 ```js
-const names = ['Pedro', 'Paul', 'Dimitris', 'Vlad', 'Gossip'];
+const names = ['Paul', 'Dimitris', 'Vlad', 'Gossip'];
 ```
 
 If you change the names, keep the `localStorage` schema in mind. Existing users
