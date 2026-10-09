@@ -23,14 +23,19 @@ To run the browser smoke checks:
 
 ```bash
 npm install
-python3 -m http.server 8765 --bind 127.0.0.1
 npm test
 ```
+
+The tests start a local server on port 8765 themselves (or reuse one that is
+already running there).
 
 ## Features
 
 - Roulette-style team picker with a cryptographically secure random choice.
 - Weighted picks that reduce immediate repeats.
+- Gossip wheel: when the main wheel lands on Gossip, a second wheel opens,
+  spins on its own, and picks which team member brings the gossip. The last
+  gossip speaker is less likely to be picked again.
 - Friday mode with a stronger Gossip weight, countdown, confetti, and chime.
 - Team pick statistics stored in the browser.
 - Day preview via `?day=N`, where `0=Sunday` through `6=Saturday`.
@@ -42,7 +47,8 @@ The app lives in [index.html](./index.html). It uses:
 
 - Hand-written static CSS in [styles.css](./styles.css) for layout and utilities.
 - A dependency-free inline SVG for the wheel rendering.
-- canvas-confetti (the only external script) for celebration effects.
+- canvas-confetti 1.9.3 (ISC license), vendored in `vendor/` so the app
+  makes no third-party requests and never waits on a CDN to start.
 - The browser's system font stack (no web fonts).
 - `localStorage` for user-local stats and settings.
 
@@ -56,6 +62,7 @@ The app stores data only in the current browser:
 | --- | --- |
 | `foxesWheelStats` | Current streak and total pick counts. |
 | `foxesSound` | Chime toggle preference. |
+| `foxesLastGossip` | Last person picked by the gossip wheel. |
 
 Clearing browser site data resets these values.
 
@@ -88,7 +95,11 @@ There is no install command and no build command.
 |-- package-lock.json
 |-- package.json
 |-- smoke.spec.js
+|-- playwright.config.js
 |-- styles.css
+|-- vendor/
+|   |-- confetti.browser.js
+|   `-- confetti.LICENSE
 `-- README.md
 ```
 
